@@ -2,6 +2,7 @@
 Admin Service - API Routes
 """
 import logging
+import uuid
 from fastapi import APIRouter, Depends, Request, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -70,10 +71,16 @@ async def toggle_user(user_id: str, request: Request, db: Session = Depends(get_
     require_admin(request)
     admin_id = request.headers.get("X-User-ID")
 
-    if user_id == admin_id:
+    try:
+        user_uuid = uuid.UUID(user_id)
+        admin_uuid = uuid.UUID(admin_id) if admin_id else None
+    except ValueError:
+        return JSONResponse(status_code=400, content={"error": "Invalid format for user ID or admin ID."})
+
+    if user_uuid == admin_uuid:
         return JSONResponse(status_code=400, content={"error": "Cannot deactivate your own account."})
 
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.id == user_uuid).first()
     if not user:
         return JSONResponse(status_code=404, content={"error": "User not found."})
 
