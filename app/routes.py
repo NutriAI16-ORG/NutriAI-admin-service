@@ -25,7 +25,7 @@ async def admin_dashboard(request: Request, db: Session = Depends(get_db)):
     require_admin(request)
 
     total_users = db.query(func.count(User.id)).scalar()
-    active_users = db.query(func.count(User.id)).filter(User.is_active == True).scalar()
+    active_users = db.query(func.count(User.id)).filter(User.is_active.is_(True)).scalar()
     total_documents = db.query(func.count(Document.id)).scalar()
     total_diet_plans = db.query(func.count(DietPlan.id)).scalar()
     total_health_logs = db.query(func.count(HealthLog.id)).scalar()
