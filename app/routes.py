@@ -7,8 +7,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from database import get_db
-from models import User, Document, DietPlan, HealthLog
+from app.database import get_db
+from app.models import User, Document, DietPlan, HealthLog
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/admin", tags=["Admin"])
